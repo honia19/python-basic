@@ -1,8 +1,40 @@
-expenses_weekly = [250, 150, 400, 100, 350, 200, 300]
+def parse_amount(input_string: str) -> str:
+    normalized = ' '.join(input_string.strip().lower().split())
 
-total_expenses = sum(expenses_weekly)
-average_expense = total_expenses / len(expenses_weekly)
-min_expense = min(expenses_weekly)
-max_expense = max(expenses_weekly)
+    parts = normalized.split()
 
-print((min_expense, max_expense, total_expenses))
+    rubles = 0
+    kopeks = 0
+
+    try:
+        if len(parts) == 2:
+            if parts[1] in ['руб', 'рубль', 'рубля', 'рублей']:
+                rubles = int(parts[0])
+            else:
+                return "Некорректный формат суммы"
+
+        elif len(parts) == 4:
+            if parts[1] in ['руб', 'рубль', 'рубля', 'рублей'] and \
+                    parts[3] in ['коп', 'копейка', 'копейки', 'копеек']:
+                rubles = int(parts[0])
+                kopeks = int(parts[2])
+
+                if kopeks < 0 or kopeks > 99:
+                    return "Некорректный формат суммы"
+            else:
+                return "Некорректный формат суммы"
+        else:
+            return "Некорректный формат суммы"
+
+        if rubles < 0:
+            return "Некорректный формат суммы"
+
+        return f"{rubles}.{kopeks:02d} ₽"
+
+    except ValueError:
+        return "Некорректный формат суммы"
+
+
+user_input = input()
+result = parse_amount(user_input)
+print(result)
